@@ -21,6 +21,7 @@ class App extends React.Component {
     };
 
     this.updateTrail = this.updateTrail.bind(this);
+    this.redirected = this.redirected.bind(this);
   }
 
   componentDidMount() {}
@@ -37,12 +38,18 @@ class App extends React.Component {
     );
   }
 
+  redirected() {
+    this.setState({ redir: false });
+  }
+
   render() {
     if (this.state.redir) {
-      this.setState({ redir: false });
+      this.redirected();
+
+      // redirect to the trail once its been parsed
       return (
         <Router>
-          <Redirect to={`/trail/${this.state.redirTarget}`} />
+          <Redirect to={`/trail/${this.state.redirTarget}`} push />
         </Router>
       );
     }

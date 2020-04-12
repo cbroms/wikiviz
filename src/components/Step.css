@@ -6,3 +6,26 @@
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+.step-link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/*Wikipedia stuff*/
+
+.infobox {
+    display: none;
+}
+
+.hatnote {
+    display: none;
+}
+
+.vertical-navbox {
+    display: none;
+}
+
+.metadata {
+    display: none;
+}

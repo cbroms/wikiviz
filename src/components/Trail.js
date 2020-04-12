@@ -1,5 +1,6 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import { BrowserRouter as Router, Redirect } from "react-router-dom";
 
 import Step from "./Step";
 
@@ -10,12 +11,11 @@ class Trail extends React.Component {
       goodTrail: true,
       trail: [],
     };
+
+    this.pushStep = this.pushStep.bind(this);
   }
 
   componentDidMount() {
-    // const translatedTrail = this.props.trail.map((val, i) =>{
-
-    // })
     const { id } = this.props.match.params;
 
     try {
@@ -35,14 +35,30 @@ class Trail extends React.Component {
     }
   }
 
+  pushStep(newPage) {
+    this.setState(
+      {
+        trail: this.state.trail.concat([newPage]),
+      },
+      () => {
+        // change the url without reloading
+        const enc = btoa(JSON.stringify(this.state.trail));
+        window.history.pushState({}, "", enc);
+      }
+    );
+  }
+
   render() {
     if (this.state.goodTrail) {
       const steps = this.state.trail.map((val) => {
         return (
-          <Step wikiTarget={val} key={uuidv4()} trail={this.state.trail} />
+          <Step
+            wikiTarget={val}
+            key={val}
+            pushStep={(val) => this.pushStep(val)}
+          />
         );
       });
-
       return <div>{steps}</div>;
     } else {
       return <div>Bad Trail!</div>;

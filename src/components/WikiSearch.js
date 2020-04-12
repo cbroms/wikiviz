@@ -1,6 +1,8 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import "./WikiSearch.css";
+
 class WikiSearch extends React.Component {
     constructor(props) {
         super(props);
@@ -39,6 +41,7 @@ class WikiSearch extends React.Component {
         const recs = this.state.recs.map((val, i) => {
             return (
                 <div
+                    className="wiki-rec"
                     onClick={() =>
                         this.props.onselection(
                             this.state.recUrls[i].substr(
@@ -55,15 +58,15 @@ class WikiSearch extends React.Component {
         });
 
         return (
-            <div>
-                <label htmlFor="wikipage">Wikipedia Page: </label>
+            <div id="wiki-search">
                 <input
-                    name="wikipage"
+                    id="wiki-input"
+                    placeholder="Search for a Wikipedia page"
                     type="text"
                     value={this.state.value}
                     onChange={this.handleChange}
                 />
-                <div>{recs}</div>
+                <div id="wiki-recs">{recs}</div>
             </div>
         );
     }
