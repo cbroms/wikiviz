@@ -1,4 +1,5 @@
 import React from "react";
+import LineTo from "react-lineto";
 import parse, { domToReact } from "html-react-parser";
 import { v4 as uuidv4 } from "uuid";
 
@@ -17,6 +18,8 @@ class Step extends React.Component {
         this.state = {
             content: "Loading Page...",
             wikiTarget: this.props.wikiTarget,
+            renderLink: false,
+            stepTarget: "",
         };
 
         this.getWikiPage = this.getWikiPage.bind(this);
@@ -42,9 +45,16 @@ class Step extends React.Component {
                         );
                         return (
                             <span
-                                className="step-link"
+                                className={`step-link link-${loc}-${
+                                    this.state.wikiTarget
+                                }`}
                                 onClick={(e) => {
                                     this.props.pushStep(loc);
+                                    this.setState({
+                                        renderLink: true,
+                                        stepTarget: loc,
+                                    });
+                                    console.log(loc);
                                 }}
                             >
                                 {domToReact(children, options)}
@@ -64,7 +74,7 @@ class Step extends React.Component {
                 return value.json();
             })
             .then((data) => {
-                if (data.parse.sections.length === 0) {
+                if (data.parse && data.parse.sections.length === 0) {
                     // page is a redirect, extract the new target
                     const redir = data.parse.text["*"].match(
                         /\/wiki\/([A-Z])\w+/
@@ -78,20 +88,43 @@ class Step extends React.Component {
                     this.setState({ wikiTarget: newLoc }, () => {
                         this.getWikiPage();
                     });
-                } else {
+                } else if (data.parse) {
                     this.setState({
                         title: data.parse.title,
                         content: parse(data.parse.text["*"], options),
+                    });
+                } else {
+                    this.setState({
+                        content: "Page does not exist",
                     });
                 }
             });
     }
 
     render() {
+        console.log(this.state.stepTarget);
         return (
-            <div className="step">
-                <h1>{this.state.title}</h1>
-                {this.state.content}{" "}
+            <div className="step-wrapper">
+                {this.state.renderLink ? (
+                    <LineTo
+                        from={`link-${this.state.stepTarget}-${
+                            this.state.wikiTarget
+                        }`}
+                        to={this.state.stepTarget}
+                        delay={1000}
+                        toAnchor="top left"
+                        fromAnchor="bottom right"
+                        borderColor="#000"
+                        borderStyle="solid"
+                        borderWidth={2}
+                    />
+                ) : (
+                    <span />
+                )}
+                <div className={`step ${this.state.wikiTarget}`}>
+                    <h1>{this.state.title}</h1>
+                    {this.state.content}
+                </div>
             </div>
         );
     }

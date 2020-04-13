@@ -59,7 +59,12 @@ class Trail extends React.Component {
           />
         );
       });
-      return <div>{steps}</div>;
+
+      const width =
+        window.innerWidth < 600
+          ? `${100 * steps.length}vw`
+          : `${840 * steps.length}px`;
+      return <div style={{ width: width }}>{steps}</div>;
     } else {
       return <div>Bad Trail!</div>;
     }

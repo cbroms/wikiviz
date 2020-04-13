@@ -6,10 +6,10 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "bent": "^7.1.2",
     "html-react-parser": "^0.10.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-lineto": "^3.1.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "uuid": "^7.0.3"
