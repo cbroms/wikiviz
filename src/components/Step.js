@@ -18,8 +18,10 @@ class Step extends React.Component {
         this.state = {
             content: "Loading Page...",
             wikiTarget: this.props.wikiTarget,
+            initialTarget: this.props.initialTarget,
             renderLink: false,
             stepTarget: "",
+            scrolled: 0,
         };
 
         this.getWikiPage = this.getWikiPage.bind(this);
@@ -53,8 +55,11 @@ class Step extends React.Component {
                                     this.setState({
                                         renderLink: true,
                                         stepTarget: loc,
+                                        stepTargetInitial: loc,
                                     });
-                                    console.log(loc);
+                                    e.target.style.fontWeight = 600;
+                                    e.target.style.backgroundColor = "black";
+                                    e.target.style.color = "white";
                                 }}
                             >
                                 {domToReact(children, options)}
@@ -85,9 +90,14 @@ class Step extends React.Component {
                         redir.length
                     );
 
-                    this.setState({ wikiTarget: newLoc }, () => {
-                        this.getWikiPage();
-                    });
+                    this.setState(
+                        {
+                            wikiTarget: newLoc,
+                        },
+                        () => {
+                            this.getWikiPage();
+                        }
+                    );
                 } else if (data.parse) {
                     this.setState({
                         title: data.parse.title,
@@ -102,7 +112,6 @@ class Step extends React.Component {
     }
 
     render() {
-        console.log(this.state.stepTarget);
         return (
             <div className="step-wrapper">
                 {this.state.renderLink ? (
@@ -113,7 +122,7 @@ class Step extends React.Component {
                         to={this.state.stepTarget}
                         delay={1000}
                         toAnchor="top left"
-                        fromAnchor="bottom right"
+                        fromAnchor="top right"
                         borderColor="#000"
                         borderStyle="solid"
                         borderWidth={2}
@@ -121,9 +130,17 @@ class Step extends React.Component {
                 ) : (
                     <span />
                 )}
-                <div className={`step ${this.state.wikiTarget}`}>
-                    <h1>{this.state.title}</h1>
-                    {this.state.content}
+                <div
+                    className={`step ${this.state.initialTarget}`}
+                    onScroll={(e) =>
+                        this.setState({ scrolled: e.target.scrollTop })
+                    }
+                >
+                    <div className="step-header">{this.state.title}</div>
+                    <div className="step-int">
+                        <h1>{this.state.title}</h1>
+                        {this.state.content}
+                    </div>
                 </div>
             </div>
         );

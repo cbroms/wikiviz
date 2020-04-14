@@ -1,11 +1,24 @@
 .step {
-    width: calc(100vw - 44px);
+    width: calc(100vw - 4px);
     max-width: 600px;
     max-height: 90vh;
-    padding: 20px;
     border: 2px solid black;
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+.step-int {
+    padding: 20px;
+}
+
+.step-header {
+    width: calc(100vw - 44px);
+    max-width: 560px;
+    background-color: black;
+    color: white;
+    font-weight: 600;
+    position: absolute;
+    padding: 5px 20px;
 }
 
 @media only screen and (min-width: 600px) {

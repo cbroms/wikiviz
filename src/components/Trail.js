@@ -54,6 +54,7 @@ class Trail extends React.Component {
         return (
           <Step
             wikiTarget={val}
+            initialTarget={val}
             key={val}
             pushStep={(val) => this.pushStep(val)}
           />
