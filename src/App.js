@@ -15,7 +15,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      trail: [],
+      trail: {},
       redir: false,
       redirTarget: "",
     };
@@ -29,7 +29,7 @@ class App extends React.Component {
   updateTrail(newPage) {
     this.setState(
       {
-        trail: [newPage],
+        trail: { p: newPage, t: [] },
       },
       () => {
         const enc = btoa(JSON.stringify(this.state.trail));
