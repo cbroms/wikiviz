@@ -17,6 +17,7 @@ class Step extends React.Component {
         super(props);
         this.state = {
             content: "Loading Page...",
+            stepTargets: [],
             wikiTarget: this.props.wikiTarget,
             initialTarget: this.props.initialTarget,
             renderLink: false,
@@ -25,6 +26,7 @@ class Step extends React.Component {
         };
 
         this.getWikiPage = this.getWikiPage.bind(this);
+        this.findAndDrawLinks = this.findAndDrawLinks.bind(this);
     }
 
     componentDidMount() {
@@ -45,17 +47,27 @@ class Step extends React.Component {
                             attribs.href.lastIndexOf("/") + 1,
                             attribs.href.length
                         );
+
+                        // currently this is dynamic and changes each time the page is rerendered
+                        // would be good to make the uuid static and preserved in state so the
+                        // correct instance of the link is preserved
+                        const elemUuid = uuidv4();
                         return (
                             <span
-                                className={`step-link link-${loc}-${
-                                    this.state.wikiTarget
-                                }`}
+                                className={`step-link ${elemUuid}`}
                                 onClick={(e) => {
                                     this.props.pushStep(loc);
                                     this.setState({
                                         renderLink: true,
-                                        stepTarget: loc,
-                                        stepTargetInitial: loc,
+                                        stepTargets: this.state.stepTargets.concat(
+                                            [
+                                                {
+                                                    stepTarget: loc,
+                                                    stepTargetInitial: loc,
+                                                    stepTargetLinkUuid: elemUuid,
+                                                },
+                                            ]
+                                        ),
                                     });
                                     e.target.style.fontWeight = 600;
                                     e.target.style.backgroundColor = "black";
@@ -90,19 +102,19 @@ class Step extends React.Component {
                         redir.length
                     );
 
-                    this.setState(
-                        {
-                            wikiTarget: newLoc,
-                        },
-                        () => {
-                            this.getWikiPage();
-                        }
-                    );
-                } else if (data.parse) {
-                    this.setState({
-                        title: data.parse.title,
-                        content: parse(data.parse.text["*"], options),
+                    this.setState({ wikiTarget: newLoc }, () => {
+                        this.getWikiPage();
                     });
+                } else if (data.parse) {
+                    try {
+                        const parsed = parse(data.parse.text["*"], options);
+                        this.setState({
+                            title: data.parse.title,
+                            content: parsed,
+                        });
+                    } catch (e) {
+                        this.setState({ content: "Error parsing page" });
+                    }
                 } else {
                     this.setState({
                         content: "Page does not exist",
@@ -111,25 +123,31 @@ class Step extends React.Component {
             });
     }
 
+    findAndDrawLinks(nextPage) {
+        // this won't work if the reference to the page is a redirect
+        // maybe preserve the redirect in state as a work around?
+    }
+
     render() {
+        const links = this.state.stepTargets.map((val) => {
+            return (
+                <LineTo
+                    from={val.stepTargetLinkUuid}
+                    to={val.stepTarget}
+                    delay={1000}
+                    toAnchor="top left"
+                    fromAnchor="top right"
+                    borderColor="#000"
+                    borderStyle="solid"
+                    borderWidth={2}
+                    key={`${val.stepTargetLinkUuid}-${val.stepTarget}`}
+                />
+            );
+        });
+
         return (
             <div className="step-wrapper">
-                {this.state.renderLink ? (
-                    <LineTo
-                        from={`link-${this.state.stepTarget}-${
-                            this.state.wikiTarget
-                        }`}
-                        to={this.state.stepTarget}
-                        delay={1000}
-                        toAnchor="top left"
-                        fromAnchor="top right"
-                        borderColor="#000"
-                        borderStyle="solid"
-                        borderWidth={2}
-                    />
-                ) : (
-                    <span />
-                )}
+                {links}
                 <div
                     className={`step ${this.state.initialTarget}`}
                     onScroll={(e) =>

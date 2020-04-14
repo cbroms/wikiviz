@@ -1,6 +1,7 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import Step from "./Step";
 
@@ -28,7 +29,10 @@ class Trail extends React.Component {
         throw "Bad trail";
       }
 
-      this.setState({ trail: trail, goodTrail: true });
+      this.setState({
+        trail: trail,
+        goodTrail: true,
+      });
     } catch (e) {
       console.log(e);
       this.setState({ goodTrail: false });
@@ -50,7 +54,7 @@ class Trail extends React.Component {
 
   render() {
     if (this.state.goodTrail) {
-      const steps = this.state.trail.map((val) => {
+      const steps = this.state.trail.map((val, i) => {
         return (
           <Step
             wikiTarget={val}
@@ -65,7 +69,17 @@ class Trail extends React.Component {
         window.innerWidth < 600
           ? `${100 * steps.length}vw`
           : `${840 * steps.length}px`;
-      return <div style={{ width: width }}>{steps}</div>;
+
+      return (
+        <TransformWrapper
+          pinch={{ disabled: true }}
+          wheel={{ touchPadEnabled: false, wheelEnabled: false }}
+        >
+          <TransformComponent>
+            <div style={{ width: width }}>{steps}</div>
+          </TransformComponent>
+        </TransformWrapper>
+      );
     } else {
       return <div>Bad Trail!</div>;
     }
