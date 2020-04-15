@@ -1,0 +1,19 @@
+.step-control-min {
+}
+
+.step-control-close {
+	margin-left: 10px;
+}
+
+.step-control {
+	display: inline-block;
+}
+
+.step-control-wrapper {
+	color: white;
+}
+
+.icon {
+	filter: invert(1);
+	cursor: pointer;
+}

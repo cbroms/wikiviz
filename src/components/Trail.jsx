@@ -15,8 +15,10 @@ class Trail extends React.Component {
       trail: {},
     };
 
-    this.pushStep = this.pushStep.bind(this);
-    this.searchForParentAndAddStep = this.searchForParentAndAddStep.bind(this);
+    this.modifyTrail = this.modifyTrail.bind(this);
+    this.searchForParentAndModifyStep = this.searchForParentAndModifyStep.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -44,21 +46,40 @@ class Trail extends React.Component {
 
   // find where to fit the page into the trail (find the link origin step and add
   // next page to that step's trail). Recursive search function
-  searchForParentAndAddStep(trailObj, targetName, newPage) {
+  searchForParentAndModifyStep(
+    prevObj,
+    trailObj,
+    action,
+    targetName,
+    newPage = ""
+  ) {
     if (trailObj.p === targetName) {
-      trailObj.t.push({ p: newPage, t: [] });
+      // found the correct object, now modify it
+      if (action === "ADD") {
+        trailObj.t.push({ p: newPage, t: [] });
+      } else if (action === "DEL") {
+        const index = prevObj.t.indexOf(trailObj);
+        prevObj.t.splice(index, 1);
+      }
+
       return;
     } else {
       for (const step of trailObj.t) {
-        this.searchForParentAndAddStep(step, targetName, newPage);
+        this.searchForParentAndModifyStep(
+          trailObj,
+          step,
+          action,
+          targetName,
+          newPage
+        );
       }
     }
   }
 
   // add a new step to the trail (called when a link is clicked in a step)
-  pushStep(prevPage, newPage) {
+  modifyTrail(prevPage, newPage, action) {
     let trail = this.state.trail;
-    this.searchForParentAndAddStep(trail, prevPage, newPage);
+    this.searchForParentAndModifyStep({}, trail, action, prevPage, newPage);
 
     this.setState({ trail: trail }, () => {
       // change the url without reloading
@@ -91,7 +112,7 @@ class Trail extends React.Component {
       traverseTrail(this.state.trail, 0);
 
       // construct the elements from the list of columns of steps
-      const stepsRend = steps.map((col) => {
+      const stepsRend = steps.map((col, level) => {
         return (
           <div className="trail-column">
             {col.map((page) => {
@@ -100,7 +121,9 @@ class Trail extends React.Component {
                   wikiTarget={page}
                   initialTarget={page}
                   key={page}
-                  pushStep={(val) => this.pushStep(page, val)}
+                  pushStep={(val) => this.modifyTrail(page, val, "ADD")}
+                  delStep={() => this.modifyTrail(page, "", "DEL")}
+                  minimized={level >= 1}
                 />
               );
             })}

@@ -3,6 +3,8 @@ import LineTo from "react-lineto";
 import parse, { domToReact } from "html-react-parser";
 import { v4 as uuidv4 } from "uuid";
 
+import StepControls from "./StepControls";
+
 import "./Step.css";
 
 // BUGS that should be fixed at some point:
@@ -23,10 +25,12 @@ class Step extends React.Component {
             renderLink: false,
             stepTarget: "",
             scrolled: 0,
+            minimized: this.props.minimized,
         };
 
         this.getWikiPage = this.getWikiPage.bind(this);
         this.findAndDrawLinks = this.findAndDrawLinks.bind(this);
+        this.removeStep = this.removeStep.bind(this);
     }
 
     componentDidMount() {
@@ -40,9 +44,7 @@ class Step extends React.Component {
                 if (!attribs) return;
 
                 if (attribs.href) {
-                    if (attribs.href.includes("#cite_note")) {
-                        return <span />;
-                    } else if (attribs.href.includes("/wiki/")) {
+                    if (attribs.href.includes("/wiki/")) {
                         const loc = attribs.href.substr(
                             attribs.href.lastIndexOf("/") + 1,
                             attribs.href.length
@@ -83,9 +85,7 @@ class Step extends React.Component {
         };
 
         fetch(
-            `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${
-                this.state.wikiTarget
-            }`
+            `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${this.state.wikiTarget}`
         )
             .then((value) => {
                 return value.json();
@@ -128,6 +128,10 @@ class Step extends React.Component {
         // maybe preserve the redirect in state as a work around?
     }
 
+    removeStep() {
+        console.log("remove");
+    }
+
     render() {
         const links = this.state.stepTargets.map((val) => {
             return (
@@ -149,12 +153,25 @@ class Step extends React.Component {
             <div className="step-wrapper">
                 {links}
                 <div
-                    className={`step ${this.state.initialTarget}`}
+                    className={`step ${this.state.initialTarget} ${
+                        this.state.minimized ? "step-mini" : "step-maxi"
+                    }`}
                     onScroll={(e) =>
                         this.setState({ scrolled: e.target.scrollTop })
                     }
                 >
-                    <div className="step-header">{this.state.title}</div>
+                    <div className="step-header">
+                        <div>{this.state.title}</div>
+                        <StepControls
+                            minimizeActive={this.state.minimized}
+                            onClose={() => this.props.delStep()}
+                            onToggleSize={() =>
+                                this.setState({
+                                    minimized: !this.state.minimized,
+                                })
+                            }
+                        />
+                    </div>
                     <div className="step-int">
                         <h1>{this.state.title}</h1>
                         {this.state.content}

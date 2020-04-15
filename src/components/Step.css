@@ -7,6 +7,14 @@
     overflow-x: hidden;
 }
 
+.step-mini {
+    max-height: 250px;
+}
+
+.step-maxi {
+    max-height: 90vh;
+}
+
 .step-int {
     padding: 20px;
 }
@@ -19,6 +27,8 @@
     font-weight: 600;
     position: absolute;
     padding: 5px 20px;
+    display: flex;
+    justify-content: space-between;
 }
 
 @media only screen and (min-width: 600px) {
@@ -38,18 +48,18 @@
 
 /*Wikipedia stuff*/
 
-.infobox {
+.navbox,
+.desktop-float-right,
+.metadata,
+.vertical-navbox,
+.infobox,
+.hatnote,
+.mw-editsection,
+.sistersitebox,
+.portal {
     display: none;
 }
 
-.hatnote {
-    display: none;
-}
-
-.vertical-navbox {
-    display: none;
-}
-
-.metadata {
-    display: none;
+.thumbcaption {
+    font-style: italic;
 }
