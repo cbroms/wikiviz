@@ -30,14 +30,38 @@ class Step extends React.Component {
 
         this.getWikiPage = this.getWikiPage.bind(this);
         this.findAndDrawLinks = this.findAndDrawLinks.bind(this);
-        this.removeStep = this.removeStep.bind(this);
     }
 
     componentDidMount() {
-        this.getWikiPage();
+        let pageNames = [];
+        for (const page of this.props.nextSteps) {
+            pageNames.push(page.p);
+        }
+        this.getWikiPage(pageNames);
+        console.log(this.props.wikiTarget, pageNames);
     }
 
-    getWikiPage() {
+    getWikiPage(connections) {
+        // add a page to the list of links
+        const addToStepTargets = (loc, uuid, callback) => {
+            this.setState(
+                {
+                    renderLink: true,
+                    stepTargets: this.state.stepTargets.concat([
+                        {
+                            stepTarget: loc,
+                            stepTargetInitial: loc,
+                            stepTargetLinkUuid: uuid,
+                            stepTargetRef: React.createRef(),
+                        },
+                    ]),
+                },
+                () => {
+                    callback();
+                }
+            );
+        };
+
         // parsing options
         const options = {
             replace: ({ attribs, children }) => {
@@ -50,30 +74,40 @@ class Step extends React.Component {
                             attribs.href.length
                         );
 
+                        const elemUuid = uuidv4();
+
+                        if (
+                            connections !== undefined &&
+                            connections.includes(loc)
+                        ) {
+                            addToStepTargets(loc, elemUuid, () => {
+                                console.log("added");
+                            });
+
+                            connections.splice(connections.indexOf(loc), 1);
+                            console.log("conn", connections);
+                        }
+
                         // currently this is dynamic and changes each time the page is rerendered
                         // would be good to make the uuid static and preserved in state so the
                         // correct instance of the link is preserved
-                        const elemUuid = uuidv4();
+
                         return (
                             <span
                                 className={`step-link ${elemUuid}`}
                                 onClick={(e) => {
                                     this.props.pushStep(loc);
-                                    this.setState({
-                                        renderLink: true,
-                                        stepTargets: this.state.stepTargets.concat(
-                                            [
-                                                {
-                                                    stepTarget: loc,
-                                                    stepTargetInitial: loc,
-                                                    stepTargetLinkUuid: elemUuid,
-                                                },
-                                            ]
-                                        ),
+                                    addToStepTargets(loc, elemUuid, () => {
+                                        console.log("added");
+                                        // // now set the ref to the clicked element
+                                        // let targets = this.state.stepTargets;
+                                        // [targets.length - 1].stepTargetRef =
+                                        //     e.target;
+                                        // this.setState({ stepTargets: targets });
                                     });
-                                    e.target.style.fontWeight = 600;
-                                    e.target.style.backgroundColor = "black";
-                                    e.target.style.color = "white";
+                                    e.target.classList.add(
+                                        "step-link-selected"
+                                    );
                                 }}
                             >
                                 {domToReact(children, options)}
@@ -123,22 +157,50 @@ class Step extends React.Component {
             });
     }
 
-    findAndDrawLinks(nextPage) {
+    findAndDrawLinks(pages) {
         // this won't work if the reference to the page is a redirect
         // maybe preserve the redirect in state as a work around?
     }
 
-    removeStep() {
-        console.log("remove");
-    }
-
     render() {
         const links = this.state.stepTargets.map((val) => {
+            // the class the line will be drawn from
+            let fromClass = this.state.wikiTarget;
+
+            const elt = document.getElementsByClassName(
+                val.stepTargetLinkUuid
+            )[0];
+
+            // determine if the line start element is visible
+            if (elt !== undefined) {
+                const rect = elt.getBoundingClientRect();
+                const vis = document.elementFromPoint(rect.x, rect.y);
+
+                if (vis === elt) fromClass = val.stepTargetLinkUuid;
+                else if (vis !== null) {
+                    // case where the link is two lines and the x/y pos is inaccurate
+                    const vis2 = document.elementFromPoint(
+                        rect.right - 10,
+                        rect.y
+                    );
+                    if (vis2 === elt) fromClass = val.stepTargetLinkUuid;
+                }
+
+                if (
+                    fromClass === val.stepTargetLinkUuid &&
+                    document.getElementsByClassName(val.stepTarget).length > 0
+                ) {
+                    elt.classList.add("step-link-selected");
+                } else {
+                    elt.classList.remove("step-link-selected");
+                }
+            }
+
             return (
                 <LineTo
-                    from={val.stepTargetLinkUuid}
+                    from={fromClass}
                     to={val.stepTarget}
-                    delay={1000}
+                    delay={20}
                     toAnchor="top left"
                     fromAnchor="top right"
                     borderColor="#000"

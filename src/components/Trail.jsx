@@ -96,9 +96,9 @@ class Trail extends React.Component {
       // recursively add each trail to the list of steps, by level
       const traverseTrail = (trailObj, level) => {
         if (steps[level] === undefined) {
-          steps.push([trailObj.p]);
+          steps.push([trailObj]);
         } else {
-          steps[level].push(trailObj.p);
+          steps[level].push(trailObj);
         }
 
         if (trailObj.t.length === 0) return;
@@ -118,12 +118,13 @@ class Trail extends React.Component {
             {col.map((page) => {
               return (
                 <Step
-                  wikiTarget={page}
-                  initialTarget={page}
-                  key={page}
-                  pushStep={(val) => this.modifyTrail(page, val, "ADD")}
-                  delStep={() => this.modifyTrail(page, "", "DEL")}
+                  wikiTarget={page.p}
+                  initialTarget={page.p}
+                  key={page.p}
+                  pushStep={(val) => this.modifyTrail(page.p, val, "ADD")}
+                  delStep={() => this.modifyTrail(page.p, "", "DEL")}
                   minimized={level >= 1}
+                  nextSteps={page.t}
                 />
               );
             })}

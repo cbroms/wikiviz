@@ -46,6 +46,12 @@
     cursor: pointer;
 }
 
+.step-link-selected {
+    color: white;
+    background-color: black;
+    font-weight: 600;
+}
+
 /*Wikipedia stuff*/
 
 .navbox,
