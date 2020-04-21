@@ -21,6 +21,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "https://en.wikipedia.org/w/",
   "eslintConfig": {
     "extends": "react-app"
   },

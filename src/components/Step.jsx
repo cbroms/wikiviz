@@ -81,7 +81,7 @@ class Step extends React.Component {
                             connections.includes(loc)
                         ) {
                             addToStepTargets(loc, elemUuid, () => {
-                                console.log("added");
+                                console.log("added " + loc);
                             });
 
                             connections.splice(connections.indexOf(loc), 1);
@@ -96,18 +96,21 @@ class Step extends React.Component {
                             <span
                                 className={`step-link ${elemUuid}`}
                                 onClick={(e) => {
+                                    const lastBeforeChange = this.props
+                                        .lastStep;
                                     this.props.pushStep(loc);
                                     addToStepTargets(loc, elemUuid, () => {
-                                        console.log("added");
-                                        // // now set the ref to the clicked element
-                                        // let targets = this.state.stepTargets;
-                                        // [targets.length - 1].stepTargetRef =
-                                        //     e.target;
-                                        // this.setState({ stepTargets: targets });
+                                        // only scroll if it's the last step in the trail
+
+                                        if (lastBeforeChange)
+                                            this.props.scrollRight();
+
+                                        document
+                                            .getElementsByClassName(elemUuid)[0]
+                                            .classList.add(
+                                                "step-link-selected"
+                                            );
                                     });
-                                    e.target.classList.add(
-                                        "step-link-selected"
-                                    );
                                 }}
                             >
                                 {domToReact(children, options)}
@@ -118,9 +121,7 @@ class Step extends React.Component {
             },
         };
 
-        fetch(
-            `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${this.state.wikiTarget}`
-        )
+        fetch(`/api.php?action=parse&format=json&page=${this.state.wikiTarget}`)
             .then((value) => {
                 return value.json();
             })

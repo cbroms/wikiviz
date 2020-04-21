@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Redirect } from "react-router-dom";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import Step from "./Step";
+import TrailNavigation from "./TrailNavigation";
 
 import "./Trail.css";
 
@@ -19,6 +20,9 @@ class Trail extends React.Component {
     this.searchForParentAndModifyStep = this.searchForParentAndModifyStep.bind(
       this
     );
+    this.scrollLeft = this.scrollLeft.bind(this);
+    this.scrollRight = this.scrollRight.bind(this);
+    this.scroll = this.scroll.bind(this);
   }
 
   componentDidMount() {
@@ -42,6 +46,19 @@ class Trail extends React.Component {
       console.log(e);
       this.setState({ goodTrail: false });
     }
+  }
+
+  scroll(left) {
+    const width = window.innerWidth < 600 ? window.innerWidth : 840;
+    window.scrollBy(left ? -width : width, 0);
+  }
+
+  scrollLeft() {
+    this.scroll(true);
+  }
+
+  scrollRight() {
+    this.scroll(false);
   }
 
   // find where to fit the page into the trail (find the link origin step and add
@@ -114,7 +131,7 @@ class Trail extends React.Component {
       // construct the elements from the list of columns of steps
       const stepsRend = steps.map((col, level) => {
         return (
-          <div className="trail-column">
+          <div className="trail-column" key={level}>
             {col.map((page) => {
               return (
                 <Step
@@ -125,6 +142,8 @@ class Trail extends React.Component {
                   delStep={() => this.modifyTrail(page.p, "", "DEL")}
                   minimized={level >= 1}
                   nextSteps={page.t}
+                  scrollRight={this.scrollRight}
+                  lastStep={level === steps.length - 1}
                 />
               );
             })}
@@ -144,7 +163,9 @@ class Trail extends React.Component {
         >
           <TransformComponent>*/
         <div style={{ width: width }} id="trail">
+          <TrailNavigation left action={this.scrollLeft} />
           {stepsRend}
+          <TrailNavigation right action={this.scrollRight} />
         </div>
         //   </TransformComponent>
         // </TransformWrapper>
