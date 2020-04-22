@@ -25,7 +25,7 @@ class WikiSearch extends React.Component {
     makeWikiQuery() {
         const formattedVal = this.state.value.replace(" ", "_");
         fetch(
-            `/api.php?action=opensearch&limit=4&format=json&search=${formattedVal}`
+            `https://en.wikipedia.org/w/api.php?action=opensearch&limit=4&format=json&search=${formattedVal}&origin=*`
         )
             .then((value) => {
                 return value.json();

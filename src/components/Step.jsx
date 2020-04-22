@@ -121,7 +121,9 @@ class Step extends React.Component {
             },
         };
 
-        fetch(`/api.php?action=parse&format=json&page=${this.state.wikiTarget}`)
+        fetch(
+            `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${this.state.wikiTarget}&origin=*`
+        )
             .then((value) => {
                 return value.json();
             })
