@@ -8,10 +8,19 @@ import "./StepControls.css";
 
 const StepControls = (props) => {
 	return (
-		<div className="step-control-wrapper">
+		<div className="step-control-wrapper" id={props.id}>
 			<div
 				className="step-control step-control-min"
-				onClick={() => props.onToggleSize()}
+				onClick={() => {
+					props.onToggleSize();
+
+					const elt = document.getElementById(props.id);
+					const bounds = elt.getBoundingClientRect();
+
+					window.setTimeout(() => {
+						window.scrollTo(window.scrollX, bounds.top);
+					}, 20);
+				}}
 			>
 				{props.minimizeActive ? (
 					<img

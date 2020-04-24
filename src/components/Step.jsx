@@ -11,8 +11,6 @@ import "./Step.css";
 //
 // add identifier to hash, so if theres more than one of the same
 // hash on different pages, it scrolls to the correct on (i.e. references)
-//
-// Remove [edit] from all titles
 
 class Step extends React.Component {
     constructor(props) {
@@ -29,7 +27,6 @@ class Step extends React.Component {
         };
 
         this.getWikiPage = this.getWikiPage.bind(this);
-        this.findAndDrawLinks = this.findAndDrawLinks.bind(this);
     }
 
     componentDidMount() {
@@ -38,7 +35,7 @@ class Step extends React.Component {
             pageNames.push(page.p);
         }
         this.getWikiPage(pageNames);
-        console.log(this.props.wikiTarget, pageNames);
+        //  console.log(this.props.wikiTarget, pageNames);
     }
 
     getWikiPage(connections) {
@@ -68,7 +65,10 @@ class Step extends React.Component {
                 if (!attribs) return;
 
                 if (attribs.href) {
-                    if (attribs.href.includes("/wiki/")) {
+                    if (
+                        attribs.href.includes("/wiki/") &&
+                        !attribs.href.includes("File:")
+                    ) {
                         const loc = attribs.href.substr(
                             attribs.href.lastIndexOf("/") + 1,
                             attribs.href.length
@@ -81,11 +81,10 @@ class Step extends React.Component {
                             connections.includes(loc)
                         ) {
                             addToStepTargets(loc, elemUuid, () => {
-                                console.log("added " + loc);
+                                //    console.log("added " + loc);
                             });
 
                             connections.splice(connections.indexOf(loc), 1);
-                            console.log("conn", connections);
                         }
 
                         // currently this is dynamic and changes each time the page is rerendered
@@ -116,13 +115,27 @@ class Step extends React.Component {
                                 {domToReact(children, options)}
                             </span>
                         );
+                    } else if (attribs.href.includes("File:")) {
+                        return (
+                            <a
+                                href={`https://en.wikipedia.org${attribs.href}`}
+                                target="_blank"
+                            >
+                                {domToReact(children, options)}
+                            </a>
+                        );
+                    } else if (attribs.href.includes("redlink=1")) {
+                        return <span>{domToReact(children, options)}</span>;
                     }
                 }
             },
         };
 
+        //    console.log("fetch ", this.state.wikiTarget);
         fetch(
-            `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${this.state.wikiTarget}&origin=*`
+            `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${
+                this.state.wikiTarget
+            }&origin=*`
         )
             .then((value) => {
                 return value.json();
@@ -158,11 +171,6 @@ class Step extends React.Component {
                     });
                 }
             });
-    }
-
-    findAndDrawLinks(pages) {
-        // this won't work if the reference to the page is a redirect
-        // maybe preserve the redirect in state as a work around?
     }
 
     render() {
@@ -208,7 +216,7 @@ class Step extends React.Component {
                     fromAnchor="top right"
                     borderColor="#000"
                     borderStyle="solid"
-                    borderWidth={2}
+                    borderWidth={4}
                     key={`${val.stepTargetLinkUuid}-${val.stepTarget}`}
                 />
             );
@@ -229,7 +237,9 @@ class Step extends React.Component {
                         <div>{this.state.title}</div>
                         <StepControls
                             minimizeActive={this.state.minimized}
+                            lastInRow={this.props.lastInRow}
                             onClose={() => this.props.delStep()}
+                            id={`${this.state.wikiTarget}-controls`}
                             onToggleSize={() =>
                                 this.setState({
                                     minimized: !this.state.minimized,

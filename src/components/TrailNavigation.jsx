@@ -30,7 +30,7 @@ const TrailNavigation = (props) => {
 				className="icon-inv arrow-icon"
 				src={props.right ? Right : Left}
 				alt={props.right ? "Arrow right" : "Arrow left"}
-				title={props.right ? " Move right" : "Move reft"}
+				title={props.right ? " Move right" : "Move left"}
 			/>
 		</div>
 	);

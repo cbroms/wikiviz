@@ -132,18 +132,22 @@ class Trail extends React.Component {
       const stepsRend = steps.map((col, level) => {
         return (
           <div className="trail-column" key={level}>
-            {col.map((page) => {
+            {col.map((page, row) => {
               return (
                 <Step
                   wikiTarget={page.p}
                   initialTarget={page.p}
                   key={page.p}
                   pushStep={(val) => this.modifyTrail(page.p, val, "ADD")}
-                  delStep={() => this.modifyTrail(page.p, "", "DEL")}
+                  delStep={() => {
+                    if (level !== 0) this.modifyTrail(page.p, "", "DEL");
+                    else window.location.href = "/";
+                  }}
                   minimized={level >= 1}
                   nextSteps={page.t}
                   scrollRight={this.scrollRight}
                   lastStep={level === steps.length - 1}
+                  lastInRow={row === col.length - 1}
                 />
               );
             })}
