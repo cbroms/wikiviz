@@ -64,7 +64,9 @@ class Step extends React.Component {
             replace: ({ attribs, children }) => {
                 if (!attribs) return;
 
-                if (attribs.href) {
+                if (attribs.src) {
+                    console.log(attribs.src);
+                } else if (attribs.href) {
                     if (
                         attribs.href.includes("/wiki/") &&
                         !attribs.href.includes("File:")
@@ -120,6 +122,7 @@ class Step extends React.Component {
                             <a
                                 href={`https://en.wikipedia.org${attribs.href}`}
                                 target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 {domToReact(children, options)}
                             </a>
@@ -133,9 +136,7 @@ class Step extends React.Component {
 
         //    console.log("fetch ", this.state.wikiTarget);
         fetch(
-            `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${
-                this.state.wikiTarget
-            }&origin=*`
+            `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${this.state.wikiTarget}&origin=*`
         )
             .then((value) => {
                 return value.json();

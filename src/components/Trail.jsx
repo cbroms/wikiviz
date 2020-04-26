@@ -1,7 +1,6 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
-import { BrowserRouter as Router, Redirect } from "react-router-dom";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+// import { BrowserRouter as Router } from "react-router-dom";
+// import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import Step from "./Step";
 import TrailNavigation from "./TrailNavigation";
@@ -35,7 +34,7 @@ class Trail extends React.Component {
 
       // check that the trail is valid, probably want to do more checking here
       if (!trail.p) {
-        throw "Bad trail";
+        throw new Error("Bad trail");
       }
 
       this.setState({
