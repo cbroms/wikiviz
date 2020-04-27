@@ -24,7 +24,9 @@
 }
 
 .arrow-icon {
-	margin-top: calc(var(--nav-height) / 2 - var(--nav-width) / 2);
+	--half-height: calc(var(--nav-height) / 2);
+	--half-width: calc(var(--nav-width) / 2);
+	margin-top: calc(var(--half-height) - var(--half-width));
 	width: var(--nav-width);
 }
 
