@@ -65,7 +65,7 @@ class Step extends React.Component {
                 if (!attribs) return;
 
                 if (attribs.src) {
-                    console.log(attribs.src);
+                    // console.log(attribs.src);
                 } else if (attribs.href) {
                     if (
                         attribs.href.includes("/wiki/") &&
@@ -118,14 +118,35 @@ class Step extends React.Component {
                             </span>
                         );
                     } else if (attribs.href.includes("File:")) {
+                        // if the link is to a file, get the make an api call to get the full-resolution image
+                        const filename = attribs.href.substr(
+                            attribs.href.lastIndexOf("/") + 1,
+                            attribs.href.length - 1
+                        );
+                        const getUrl = () => {
+                            fetch(
+                                `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url&titles=${filename}&origin=*`
+                            )
+                                .then((value) => {
+                                    return value.json();
+                                })
+                                .then((data) => {
+                                    let url = "";
+                                    for (const key in data["query"]["pages"]) {
+                                        url =
+                                            data["query"]["pages"][key][
+                                                "imageinfo"
+                                            ][0].url;
+                                    }
+
+                                    window.open(url, "_blank");
+                                });
+                        };
+
                         return (
-                            <a
-                                href={`https://en.wikipedia.org${attribs.href}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
+                            <span className="image" onClick={() => getUrl()}>
                                 {domToReact(children, options)}
-                            </a>
+                            </span>
                         );
                     } else if (attribs.href.includes("redlink=1")) {
                         return <span>{domToReact(children, options)}</span>;
@@ -241,11 +262,12 @@ class Step extends React.Component {
                             lastInRow={this.props.lastInRow}
                             onClose={() => this.props.delStep()}
                             id={`${this.state.wikiTarget}-controls`}
-                            onToggleSize={() =>
+                            onToggleSize={() => {
                                 this.setState({
                                     minimized: !this.state.minimized,
-                                })
-                            }
+                                });
+                                this.props.updateParent();
+                            }}
                         />
                     </div>
                     <div className="step-int">

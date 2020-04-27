@@ -12,6 +12,7 @@ class Trail extends React.Component {
     super(props);
     this.state = {
       goodTrail: true,
+      redraw: false,
       trail: {},
     };
 
@@ -147,6 +148,10 @@ class Trail extends React.Component {
                   scrollRight={this.scrollRight}
                   lastStep={level === steps.length - 1}
                   lastInRow={row === col.length - 1}
+                  updateParent={() => {
+                    this.setState({ redraw: !this.state.redraw });
+                  }}
+                  redraw={this.state.redraw}
                 />
               );
             })}
