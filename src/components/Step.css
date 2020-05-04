@@ -61,6 +61,10 @@
 
 /*Wikipedia stuff*/
 
+a {
+    color: black;
+}
+
 .navbox,
 .desktop-float-right,
 .metadata,

@@ -59,11 +59,15 @@ class App extends React.Component {
         <Switch>
           <Route path="/trail/:id" component={Trail} />
           <Route path="/">
+           <h1 id="logo">WikiViz</h1>
+           <div id="centered">
+           <p id="subtitle">Browse through Wikipedia pages side by side and see how they're linked with visual hyperlink connections.</p>
             <WikiSearch
               onselection={(value) => {
                 this.updateTrail(value);
               }}
             />
+            </div>
           </Route>
         </Switch>
       </Router>

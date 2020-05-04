@@ -1,0 +1,32 @@
+#logo {
+	font-size: 24.5vw;
+	position: fixed;
+	z-index: -1;
+	top: 10%;
+	left: 0;
+	color: #f0f0f0; 
+	margin-top: 0;
+	font-family: var(--serif-font);
+}
+
+#subtitle {
+	max-width: 340px;
+	margin: 0 auto;
+	margin-bottom: 40px;
+	font-weight: 600;
+	font-size: 1.8rem;
+}
+
+#centered {
+	margin-top: 100px;
+}
+
+@media only screen and (min-width: 600px) {
+    #logo {
+    	top: 0;
+    }
+
+    #centered {
+    	margin-top: 200px;
+    }
+}

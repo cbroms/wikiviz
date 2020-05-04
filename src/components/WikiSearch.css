@@ -1,10 +1,10 @@
 #wiki-search {
     margin: 0 auto;
-    margin-top: 200px;
     max-width: 340px;
 }
 
 #wiki-recs {
+    background-color: white;
 }
 
 .wiki-rec {
