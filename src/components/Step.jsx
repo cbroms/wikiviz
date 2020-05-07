@@ -179,11 +179,18 @@ class Step extends React.Component {
                     });
                 } else if (data.parse) {
                     try {
+                        // parse the content and set it in state
                         const parsed = parse(data.parse.text["*"], options);
                         this.setState({
                             title: data.parse.title,
                             content: parsed,
                         });
+
+                        // parese and add page categories to trail
+                        const cats = data.parse.categories.filter((obj) => {
+                            return obj.hidden === undefined;
+                        });
+                        this.props.addCategories(cats, this.state.wikiTarget);
                     } catch (e) {
                         this.setState({ content: "Error parsing page" });
                     }

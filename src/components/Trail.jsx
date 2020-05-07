@@ -4,6 +4,7 @@ import React from "react";
 
 import Step from "./Step";
 import TrailNavigation from "./TrailNavigation";
+//import CategoryColors from "./CategoryColors";
 
 import "./Trail.css";
 
@@ -14,15 +15,23 @@ class Trail extends React.Component {
       goodTrail: true,
       redraw: false,
       trail: {},
+      categories: [],
     };
 
+    // for managing the overall trail
     this.modifyTrail = this.modifyTrail.bind(this);
     this.searchForParentAndModifyStep = this.searchForParentAndModifyStep.bind(
       this
     );
+
+    // scroll the page around
     this.scrollLeft = this.scrollLeft.bind(this);
     this.scrollRight = this.scrollRight.bind(this);
     this.scroll = this.scroll.bind(this);
+
+    // for managing step categories
+    this.addCategories = this.addCategories.bind(this);
+    this.remCategories = this.remCategories.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +68,19 @@ class Trail extends React.Component {
 
   scrollRight() {
     this.scroll(false);
+  }
+
+  addCategories(categories, page) {
+    const cats = this.state.categories;
+    cats.push({ c: categories, p: page });
+    this.setState({ categories: cats });
+  }
+
+  remCategories(page) {
+    const cats = this.state.categories.filter((obj) => {
+      return obj.p !== page;
+    });
+    this.setState({ categories: cats });
   }
 
   // find where to fit the page into the trail (find the link origin step and add
@@ -140,9 +162,12 @@ class Trail extends React.Component {
                   key={page.p}
                   pushStep={(val) => this.modifyTrail(page.p, val, "ADD")}
                   delStep={() => {
-                    if (level !== 0) this.modifyTrail(page.p, "", "DEL");
-                    else window.location.href = "/";
+                    if (level !== 0) {
+                      this.modifyTrail(page.p, "", "DEL");
+                      this.remCategories(page.p);
+                    } else window.location.href = "/";
                   }}
+                  addCategories={this.addCategories}
                   minimized={level >= 1}
                   nextSteps={page.t}
                   scrollRight={this.scrollRight}
@@ -173,6 +198,7 @@ class Trail extends React.Component {
         <div style={{ width: width }} id="trail">
           <TrailNavigation left action={this.scrollLeft} />
           {stepsRend}
+          {/*<CategoryColors categories={this.state.categories} />*/}
           <TrailNavigation right action={this.scrollRight} />
         </div>
         //   </TransformComponent>

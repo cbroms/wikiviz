@@ -1,14 +1,15 @@
 #trail {
-    display: flex;
+	display: flex;
+	margin: 0 auto;
 }
 
 .trail-column {
-    max-width: 100vw;
+	max-width: 100vw;
 }
 
 @media only screen and (min-width: 600px) {
-    .trail-column {
-        max-width: 860px;
-        display: inline-block;
-    }
+	.trail-column {
+		max-width: 860px;
+		display: inline-block;
+	}
 }
