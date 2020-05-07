@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+  "name": "WikiViz",
+  "version": "1.0",
+
+  "description": "Directs from Wikipedia to WikiViz.",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "wikiviz@rainflame.com"
+    }
+  },
+
+  "icons": {
+    "1024": "icons/wikiviz.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "1024": "icons/wikiviz.png"
+    },
+    "default_title": "WikiViz",
+    "default_popup": "options.html",
+    "browser_style": true
+  },
+
+  "options_ui": {
+    "page": "options.html"
+  },
+
+  "permissions": ["storage"],
+
+  "content_scripts": [
+    {
+      "matches": ["*://en.wikipedia.org/*"],
+      "run_at": "document_start",
+      "js": ["browser-polyfill.min.js", "redirect.js"]
+    }
+  ]
+}

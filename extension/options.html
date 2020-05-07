@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<style type="text/css">
+			body {
+				font-size: 12px;
+				width: 225px;
+				font-family: apple-system, BlinkMacSystemFont, "Segoe UI",
+					"Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+					"Droid Sans", "Helvetica Neue", sans-serif;
+				padding: 10px;
+				margin: 0;
+			}
+			button {
+				border: 1px solid black;
+				background-color: white;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+
+	<body>
+		<form>
+			<label for="button"
+				><b>Redirect to WikiViz <span id="option"></span></b>
+			</label>
+			<button type="submit" id="button"></button>
+		</form>
+
+		<script src="browser-polyfill.min.js"></script>
+		<script src="options.js"></script>
+	</body>
+</html>

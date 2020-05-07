@@ -1,3 +1,3 @@
-# RF Explore
+# WikiViz
 
-A way to browse through a series of Wikipedia pages visually. 
+Browse through Wikipedia pages side by side and see how they're linked with visual hyperlink connections.
