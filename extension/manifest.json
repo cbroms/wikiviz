@@ -34,6 +34,10 @@
       "matches": ["*://en.wikipedia.org/*"],
       "run_at": "document_start",
       "js": ["browser-polyfill.min.js", "redirect.js"]
+    },
+    {
+      "matches": ["*://wikiviz.rainflame.com/trail/*"],
+      "js": ["browser-polyfill.min.js", "log.js"]
     }
   ]
 }
