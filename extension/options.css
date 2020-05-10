@@ -15,6 +15,43 @@ button {
 	float: right;
 }
 
+textarea {
+	height: 15px;
+	color: white;
+	margin-top: 20px;
+	background-color: black;
+	border: 1px solid black;
+	width: 200px;
+	display: inline-block;
+	resize: none;
+	float: left;
+}
+
+input {
+	width: 328px;
+	margin: 0;
+	border: 1px solid black;
+	padding: 10px;
+}
+
+input:focus {
+	outline: none;
+	border: 2px solid black;
+	width: 326px;
+}
+
+#saved-wrapper {
+	display: none;
+	height: 40px;
+	font-weight: 400;
+}
+
+#saved-instructions {
+	margin-top: 20px;
+	display: inline-block;
+	float: right;
+}
+
 #save-button {
 	display: inline-block;
 	color: white;
@@ -22,12 +59,29 @@ button {
 	border: 1px solid white;
 }
 #current-trail {
-	padding: 10px;
 	font-size: 14px;
 	font-weight: 600;
 	background-color: black;
 	color: white;
+	padding: 20px 10px;
 }
 #trail {
 	display: inline-block;
+}
+
+.wrapper {
+	padding: 10px;
+}
+
+.rec {
+	width: 328px;
+	border-right: 1px solid black;
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.rec:hover {
+	background-color: #f0f0f0;
 }

@@ -7,15 +7,34 @@
 	</head>
 
 	<body>
-		<div id="current-trail">
+		<div id="current-trail" class="wrapper">
 			<div id="trail"></div>
 			<button id="save-button">Save Trail</button>
+
+			<div id="saved-wrapper">
+				<textarea id="saved"></textarea>
+				<div id="saved-instructions"></div>
+			</div>
+		</div>
+		<div id="search-wrapper" class="wrapper">
+			<h3>Saved Trails</h3>
+			<input
+				type="text"
+				name="search"
+				id="input-search"
+				placeholder="Search for a saved trail"
+			/>
+			<div id="search-recs"></div>
 		</div>
 
-		<label for="button"
-			>Redirect to WikiViz <b><span id="option"></span></b>
-		</label>
-		<button id="button"></button>
+		<div id="settings-wrapper" class="wrapper">
+			<h3>Settings</h3>
+			<label for="button"
+				>Redirect from Wikipedia to WikiViz:
+				<b><span id="option"></span></b>
+			</label>
+			<button id="options-button"></button>
+		</div>
 
 		<script src="browser-polyfill.min.js"></script>
 		<script src="options.js"></script>

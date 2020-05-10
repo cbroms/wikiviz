@@ -27,7 +27,7 @@
     "page": "options.html"
   },
 
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
 
   "content_scripts": [
     {
